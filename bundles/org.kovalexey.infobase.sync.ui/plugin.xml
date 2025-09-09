@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.kovalexey.infobase.sync.ui.DependecyInjectorFactory:org.kovalexey.infobase.sync.ui.handlers.UpdateChangesList"
+            id="org.kovalexey.infobase.sync.ui.updatesynchonizationlist"
+            name="Заполнить список изменений">
+      </command>
+      <command
+            defaultHandler="org.kovalexey.infobase.sync.ui.DependecyInjectorFactory:org.kovalexey.infobase.sync.ui.handlers.SetFullSynchroHandler"
+            id="org.kovalexey.infobase.sync.ui.setfullsyncho"
+            name="Принудительно синхронизировать">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+            <menuContribution
+            allPopups="false"
+            locationURI="popup:com.e1c.g5.dt.applications.ui.view?after=additions">
+         <command
+               commandId="org.kovalexey.infobase.sync.ui.setfullsyncho"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate>
+                  <instanceof
+                        value="com.e1c.g5.dt.applications.infobases.IInfobaseApplication">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.kovalexey.infobase.sync.ui.updatesynchonizationlist"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate>
+                  <instanceof
+                        value="com.e1c.g5.dt.applications.infobases.IInfobaseApplication">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+      <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.kovalexey.infobase.sync.ui.DependecyInjectorFactory:org.kovalexey.infobase.sync.ui.changedrecords.InfobaseChangeContentProvider"
+            id="com.e1c.g5.dt.applications.ui.view.InfobaseChangedContent"
+            labelProvider="org.kovalexey.infobase.sync.ui.changedrecords.ChangeRecordLabelProvider"
+            name="Infobase changed content"
+            priority="normal">
+         <triggerPoints>
+            <instanceof
+                  value="com.e1c.g5.dt.applications.infobases.IInfobaseApplication">
+            </instanceof>
+         </triggerPoints>
+         <possibleChildren>
+            <instanceof
+                  value="org.kovalexey.infobase.sync.ui.changedrecords.ChangeRecord">
+            </instanceof>
+         </possibleChildren>
+      </navigatorContent>
+   </extension>
+      <extension
+            point="org.eclipse.ui.startup">
+         <startup
+               class="org.kovalexey.infobase.sync.ui.DependecyInjectorFactory:org.kovalexey.infobase.sync.ui.Startup2">
+         </startup>
+      </extension>
+
+</plugin>

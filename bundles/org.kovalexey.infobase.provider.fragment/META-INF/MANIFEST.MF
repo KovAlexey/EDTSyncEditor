@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Provider
+Bundle-SymbolicName: org.kovalexey.infobase.provider.fragment;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: com._1c.g5.v8.dt.platform.services.core;bundle-version="19.0.0"
+Require-Bundle: org.kovalexey.infobase.sync.ui;bundle-version="0.0.1",
+ org.eclipse.ui
+Automatic-Module-Name: org.kovalexey.infobase.provider
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Import-Package: com.e1c.g5.dt.applications.infobases;version="[2.0.0,3.0.0)"

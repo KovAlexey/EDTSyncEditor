@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Fragment
+Bundle-SymbolicName: org.kovalexey.infobase.applications.ui.fragment;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: com.e1c.g5.dt.applications.ui;bundle-version="4.0.100"
+Require-Bundle: org.kovalexey.infobase.sync.ui;bundle-version="0.0.1"
+Automatic-Module-Name: org.kovalexey.infobase.applications.ui.fragment
+Bundle-RequiredExecutionEnvironment: JavaSE-17
