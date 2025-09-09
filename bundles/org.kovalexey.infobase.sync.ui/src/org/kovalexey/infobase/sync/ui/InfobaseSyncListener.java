@@ -4,6 +4,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.IInfobaseSynchronizationListener;
@@ -20,6 +22,8 @@ public class InfobaseSyncListener implements IInfobaseSynchronizationListener {
 	IInfobaseServiceProvider infobaseServiceProvider;
 	@Inject
 	InfobaseChangesCache infobaseChangesCache;
+	@Inject
+	IApplicationsServiceProvider applicationServiceProvider;
 
 	@Override
 	public void synchronizationStateChanged(InfobaseReference p0, InfobaseSynchronizationState p1) {
@@ -34,23 +38,10 @@ public class InfobaseSyncListener implements IInfobaseSynchronizationListener {
 			return;
 		}
 		
-//		UpdateJob job = new UpdateJob("Test", infobaseServiceProvider, infobaseChangesCache, application);
-//		job.schedule();
-		
-//		Job job = new Job("Получение изменений") {
-//			
-//			@Override
-//			protected IStatus run(IProgressMonitor monitor) {
-//				var changes = infobaseServiceProvider.getChanges(application);
-//				infobaseChangesCache.clearRecords(application);
-//				return null;
-//			}
-//		};
-		
-		UIJob job = new UIJob("Получение изменений") {
+		Job job = new Job("Получение изменений") {
 			
 			@Override
-			public IStatus runInUIThread(IProgressMonitor monitor) {
+			public IStatus run(IProgressMonitor monitor) {
 				var changes = infobaseServiceProvider.getChanges(application);
 				infobaseChangesCache.clearRecords(application);
 				for (String name : changes) {
@@ -58,6 +49,22 @@ public class InfobaseSyncListener implements IInfobaseSynchronizationListener {
 				}
 				
 				System.out.println(changes);
+				
+				Display.getDefault().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						var page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+						var view = page.findView("com.e1c.g5.dt.applications.ui.view");
+						if (view == null) {
+							return;
+						}
+						
+						applicationServiceProvider.updateIfApplicationView(view);
+						System.out.println(view);
+					}
+				});
+				
 				return Status.OK_STATUS;
 			}
 		};
@@ -66,36 +73,5 @@ public class InfobaseSyncListener implements IInfobaseSynchronizationListener {
 		
 	}
 	
-	private class UpdateJob extends Job {
-		
-		private IInfobaseServiceProvider infobaseServiceProvider;
-		private InfobaseChangesCache cache;
-		IInfobaseApplication application;
-
-		
-		
-		public UpdateJob(String name, IInfobaseServiceProvider infobaseServiceProvider, InfobaseChangesCache cache,
-				IInfobaseApplication application) {
-			super(name);
-			this.infobaseServiceProvider = infobaseServiceProvider;
-			this.cache = cache;
-			this.application = application;
-		}
-
-
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			var changes = infobaseServiceProvider.getChanges(application);
-			infobaseChangesCache.clearRecords(application);
-			for (String name : changes) {
-				infobaseChangesCache.addRecord(application, name);
-			}
-			System.out.println(changes);
-			
-			return Status.OK_STATUS;
-		}
-		
-	}
 
 }

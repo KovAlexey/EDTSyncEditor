@@ -21,7 +21,11 @@ public class InfobaseChangeContentProvider implements ITreeContentProvider {
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof IApplication) {
-			return ((Object[])infobaseChangesCache.getRecords((IApplication)parentElement).toArray());
+			var records = infobaseChangesCache.getRecords((IApplication)parentElement);
+			if (records == null) {
+				return null;
+			}
+			return ((Object[])records.toArray());
 		}
 		return null;
 	}
@@ -35,7 +39,11 @@ public class InfobaseChangeContentProvider implements ITreeContentProvider {
 	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof IApplication) {
-			return (infobaseChangesCache.getRecords((IApplication)element).size() > 0);
+			var records = infobaseChangesCache.getRecords((IApplication)element);
+			if (records == null) {
+				return false;
+			}
+			return (records.size() > 0);
 		}
 		return false;
 	}

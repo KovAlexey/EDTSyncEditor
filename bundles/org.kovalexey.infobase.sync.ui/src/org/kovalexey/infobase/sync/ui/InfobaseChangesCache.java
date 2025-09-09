@@ -3,7 +3,6 @@ package org.kovalexey.infobase.sync.ui;
 import com.google.inject.Singleton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
