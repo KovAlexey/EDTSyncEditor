@@ -69,7 +69,7 @@
       <extension
             point="org.eclipse.ui.startup">
          <startup
-               class="org.kovalexey.infobase.sync.ui.DependecyInjectorFactory:org.kovalexey.infobase.sync.ui.Startup2">
+               class="org.kovalexey.infobase.sync.ui.DependecyInjectorFactory:org.kovalexey.infobase.sync.ui.EarlyStartupSubscription">
          </startup>
       </extension>
 
