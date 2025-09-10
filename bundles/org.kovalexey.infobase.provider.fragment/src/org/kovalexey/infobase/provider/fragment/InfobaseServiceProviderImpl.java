@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -13,6 +15,7 @@ import org.kovalexey.infobase.sync.ui.IInfobaseServiceProvider;
 import com._1c.g5.v8.bm.core.BmUriUtil;
 import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.dt.core.platform.IDtProject;
+import com._1c.g5.v8.dt.core.platform.IDtProjectManager;
 import com._1c.g5.v8.dt.core.platform.IWorkspaceOrchestrator;
 import com._1c.g5.v8.dt.internal.platform.services.core.SpyInjectProvider;
 import com._1c.g5.v8.dt.internal.platform.services.core.infobases.sync.InfobaseSynchronizationManager;
@@ -44,6 +47,8 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 	IApplicationManager applicationManager;
 	@Inject
 	IWorkspaceOrchestrator workspaceOrchestrator;
+	@Inject
+	IDtProjectManager dtProjectManager;
 	
 	@Override
 	public Boolean isSynchronized(IProject project, InfobaseReference infobase) {
@@ -110,23 +115,44 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 		
 		IProject project = getProjectFromInfobaseApplication(application);
 		
-//		if (!workspaceOrchestrator.isStarted(project))
-//			return result;
+		var dtProject = dtProjectManager.getDtProject(project);
+		ArrayList<IProject> childProjects = getChildProjects(dtProject);
 		
 		InfobaseReference infobase = application.getInfobase();
 		
-		ISynchronizationStrategy strategy = this.strategyProvider.getStrategy(project);
+		addChangesToList(result, infobase, project);
+		
+		for (IProject iProject : childProjects) {
+			addChangesToList(result, infobase, iProject);
+		}
+		
+		return result;
+	}
+
+	private void addChangesToList(ArrayList<String> changes, InfobaseReference infobase, IProject iProject) {
+		ISynchronizationStrategy strategy;
+		strategy = this.strategyProvider.getStrategy(iProject);
 		synchronized (SpyLockProvider.getLock((AbstractSynchronizationStrategy)strategy, infobase)) {
 			var changedObjects = strategy.getChangedObjects(infobase);
 			
 			for (EObject eObject : changedObjects) {
-				String name = getObjectName(eObject, project);
-				result.add(name);
+				String name = getObjectName(eObject, iProject);
+				changes.add(name);
 			}
 		}
+	}
+
+	private ArrayList<IProject> getChildProjects(IDtProject dtProject) {
+		var allDtProjects = (ArrayList<IDtProject>)dtProjectManager.getDtProjects();
 		
-		
-		return result;
+		ArrayList<IProject> childProjects = new ArrayList<IProject>();
+		for (IDtProject iDtProject : allDtProjects) {
+			var parent = dtProjectManager.findParentProject(iDtProject);
+			if (parent == dtProject) {
+				childProjects.add(dtProjectManager.getProject(iDtProject));
+			}
+		}
+		return childProjects;
 	}
 	
 	private String getObjectName(EObject object, IProject project) {

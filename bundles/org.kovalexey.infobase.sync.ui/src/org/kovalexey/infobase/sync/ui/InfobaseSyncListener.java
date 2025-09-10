@@ -33,6 +33,7 @@ public class InfobaseSyncListener implements IInfobaseSynchronizationListener {
 
 	@Override
 	public void equalityStateChanged(InfobaseReference infobase, InfobaseEqualityState p1) {
+		System.out.println("equalityStateChanged");
 		var application = infobaseServiceProvider.getApplicationFromInfobase(infobase);
 		if (application == null) {
 			return;
