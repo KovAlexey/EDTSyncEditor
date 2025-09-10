@@ -128,6 +128,10 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 	private void addChangesToList(ArrayList<ChangeRecord> result, InfobaseReference infobase, IProject iProject, IApplication application) {
 		ISynchronizationStrategy strategy;
 		strategy = this.strategyProvider.getStrategy(iProject);
+		if (strategy == null) {
+			// У внешних обработок и т.д. стратегий синхронизации нет
+			return;
+		}
 		synchronized (SpyLockProvider.getLock((AbstractSynchronizationStrategy)strategy, infobase)) {
 			var changedObjects = strategy.getChangedObjects(infobase);
 			
