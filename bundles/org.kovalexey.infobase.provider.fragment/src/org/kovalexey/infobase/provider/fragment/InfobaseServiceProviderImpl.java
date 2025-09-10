@@ -11,8 +11,7 @@ import org.kovalexey.infobase.sync.ui.changedrecords.ChangeRecord;
 
 import com._1c.g5.v8.bm.core.BmUriUtil;
 import com._1c.g5.v8.bm.core.IBmObject;
-import com._1c.g5.v8.dt.core.platform.IDtProject;
-import com._1c.g5.v8.dt.core.platform.IDtProjectManager;
+import com._1c.g5.v8.dt.core.platform.IV8ProjectProvider;
 import com._1c.g5.v8.dt.core.platform.IWorkspaceOrchestrator;
 import com._1c.g5.v8.dt.internal.platform.services.core.SpyInjectProvider;
 import com._1c.g5.v8.dt.internal.platform.services.core.infobases.sync.strategies.AbstractSynchronizationStrategy;
@@ -44,7 +43,7 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 	@Inject
 	IWorkspaceOrchestrator workspaceOrchestrator;
 	@Inject
-	IDtProjectManager dtProjectManager;
+	IV8ProjectProvider v8ProjectProvider;
 	
 	@Override
 	public Boolean isSynchronized(IProject project, InfobaseReference infobase) {
@@ -110,19 +109,32 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 		ArrayList<ChangeRecord> result = new ArrayList<ChangeRecord>();
 		
 		IProject project = getProjectFromInfobaseApplication(application);
-		
-		var dtProject = dtProjectManager.getDtProject(project);
-		ArrayList<IProject> childProjects = getChildProjects(dtProject);
+		var childProjects = v8ProjectProvider.getDependentProjects(project);
 		
 		InfobaseReference infobase = application.getInfobase();
 		
 		addChangesToList(result, infobase, project, application);
 		
-		for (IProject iProject : childProjects) {
-			addChangesToList(result, infobase, iProject, application);
+		for (IProject childProject : childProjects) {
+			addChangesToList(result, infobase, childProject, application);
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public IInfobaseApplication getApplicationFromInfobase(InfobaseReference infobase) {
+		var application = applicationManager.findApplicationByInfobase(infobase);
+		if (!application.isPresent()) {
+			return null;
+		}
+		
+		if (application.get() instanceof IInfobaseApplication) {
+			var infobaseApplication = ((IInfobaseApplication)application.get());
+			return infobaseApplication;
+		}
+		
+		return null;
 	}
 
 	private void addChangesToList(ArrayList<ChangeRecord> result, InfobaseReference infobase, IProject iProject, IApplication application) {
@@ -143,19 +155,6 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 				result.add(record);
 			}
 		}
-	}
-
-	private ArrayList<IProject> getChildProjects(IDtProject dtProject) {
-		var allDtProjects = (ArrayList<IDtProject>)dtProjectManager.getDtProjects();
-		
-		ArrayList<IProject> childProjects = new ArrayList<IProject>();
-		for (IDtProject iDtProject : allDtProjects) {
-			var parent = dtProjectManager.findParentProject(iDtProject);
-			if (parent == dtProject) {
-				childProjects.add(dtProjectManager.getProject(iDtProject));
-			}
-		}
-		return childProjects;
 	}
 	
 	private String getObjectName(EObject object, IProject project) {
@@ -181,21 +180,5 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 
         return name;
     }
-
-	@Override
-	public IInfobaseApplication getApplicationFromInfobase(InfobaseReference infobase) {
-		var application = applicationManager.findApplicationByInfobase(infobase);
-		if (!application.isPresent()) {
-			return null;
-		}
-		
-		if (application.get() instanceof IInfobaseApplication) {
-			var infobaseApplication = ((IInfobaseApplication)application.get());
-			return infobaseApplication;
-		}
-		
-		return null;
-	}
-
 
 }
