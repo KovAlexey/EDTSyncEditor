@@ -31,7 +31,6 @@ public class InfobaseSyncListener implements IInfobaseSynchronizationListener {
 
 	@Override
 	public void equalityStateChanged(InfobaseReference infobase, InfobaseEqualityState p1) {
-		System.out.println("equalityStateChanged");
 		var application = infobaseServiceProvider.getApplicationFromInfobase(infobase);
 		if (application == null) {
 			return;
@@ -47,8 +46,6 @@ public class InfobaseSyncListener implements IInfobaseSynchronizationListener {
 					infobaseChangesCache.addRecord(record);
 				}
 				
-				System.out.println(changes);
-				
 				Display.getDefault().asyncExec(new Runnable() {
 					
 					@Override
@@ -60,7 +57,6 @@ public class InfobaseSyncListener implements IInfobaseSynchronizationListener {
 						}
 						
 						applicationServiceProvider.updateIfApplicationView(view);
-						System.out.println(view);
 					}
 				});
 				

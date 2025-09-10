@@ -13,7 +13,6 @@ public class InfobaseChangeContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		System.out.println("getElements");
 		return null;
 	}
 
@@ -31,7 +30,6 @@ public class InfobaseChangeContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object getParent(Object element) {
-		System.out.println("getParent");
 		return null;
 	}
 

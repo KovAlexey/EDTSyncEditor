@@ -20,8 +20,6 @@ public class InitService implements IStartup {
 		
 		BundleContext context = FrameworkUtil.getBundle(Activator.class).getBundleContext();
 		context.registerService(IInfobaseServiceProvider.class, infobaseService, null);
-		
-		System.out.println("earlyStartup FRAGMENT");
 	}
 
 }
