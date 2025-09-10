@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.IInfobaseSynchronizationListener;
 import com._1c.g5.v8.dt.platform.services.model.InfobaseReference;
-import com.e1c.g5.dt.applications.IApplication;
 import com.e1c.g5.dt.applications.infobases.IInfobaseApplication;
 import com.google.inject.Injector;
 

@@ -6,14 +6,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.UIJob;
-
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.IInfobaseSynchronizationListener;
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.InfobaseEqualityState;
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.InfobaseSynchronizationState;
 import com._1c.g5.v8.dt.platform.services.model.InfobaseReference;
-import com.e1c.g5.dt.applications.IApplicationManager;
-import com.e1c.g5.dt.applications.infobases.IInfobaseApplication;
 import com.google.inject.Inject;
 
 public class InfobaseSyncListener implements IInfobaseSynchronizationListener {

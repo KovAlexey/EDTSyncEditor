@@ -4,7 +4,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.kovalexey.infobase.sync.ui.InfobaseChangesCache;
 
 import com.e1c.g5.dt.applications.IApplication;
-import com.e1c.g5.dt.applications.infobases.IInfobaseApplication;
 import com.google.inject.Inject;
 
 public class InfobaseChangeContentProvider implements ITreeContentProvider {

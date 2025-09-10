@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.kovalexey.infobase.sync.ui.changedrecords.ChangeRecord;
 
-import com._1c.g5.v8.dt.platform.services.model.InfobaseReference;
 import com.e1c.g5.dt.applications.IApplication;
 
 @Singleton

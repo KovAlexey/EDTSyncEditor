@@ -1,11 +1,7 @@
 package org.kovalexey.infobase.provider.fragment;
 
 import java.util.ArrayList;
-import java.util.Optional;
-
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -18,7 +14,6 @@ import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.core.platform.IDtProjectManager;
 import com._1c.g5.v8.dt.core.platform.IWorkspaceOrchestrator;
 import com._1c.g5.v8.dt.internal.platform.services.core.SpyInjectProvider;
-import com._1c.g5.v8.dt.internal.platform.services.core.infobases.sync.InfobaseSynchronizationManager;
 import com._1c.g5.v8.dt.internal.platform.services.core.infobases.sync.strategies.AbstractSynchronizationStrategy;
 import com._1c.g5.v8.dt.internal.platform.services.core.infobases.sync.strategies.SpyLockProvider;
 import com._1c.g5.v8.dt.platform.services.core.infobases.IInfobaseAssociationManager;
@@ -29,7 +24,6 @@ import com._1c.g5.v8.dt.platform.services.core.infobases.sync.InfobaseSynchroniz
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.InfobaseSynchronizationState;
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.strategies.ISynchronizationStrategy;
 import com._1c.g5.v8.dt.platform.services.model.InfobaseReference;
-import com.e1c.g5.dt.applications.IApplication;
 import com.e1c.g5.dt.applications.IApplicationManager;
 import com.e1c.g5.dt.applications.infobases.IInfobaseApplication;
 import com.google.inject.Inject;
