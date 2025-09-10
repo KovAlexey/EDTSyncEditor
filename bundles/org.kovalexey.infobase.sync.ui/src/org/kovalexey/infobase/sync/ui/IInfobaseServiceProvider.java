@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kovalexey.infobase.sync.ui.changedrecords.ChangeRecord;
 
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.IInfobaseSynchronizationListener;
 import com._1c.g5.v8.dt.platform.services.model.InfobaseReference;
@@ -19,6 +20,6 @@ public interface IInfobaseServiceProvider {
 	public IProject getProjectFromInfobaseApplication(IInfobaseApplication application);
 	public Injector getCoreInjector();
 	public void addSynchronizationListener(IInfobaseSynchronizationListener listener);
-	public ArrayList<String> getChanges(IInfobaseApplication application);
+	public ArrayList<ChangeRecord> getChanges(IInfobaseApplication application);
 	IInfobaseApplication getApplicationFromInfobase(InfobaseReference infobase);
 }

@@ -15,9 +15,9 @@ public class InfobaseChangesCache {
 
 	private Map<IApplication, ArrayList<ChangeRecord>> changes = new ConcurrentHashMap<IApplication, ArrayList<ChangeRecord>>();
 	
-	public void addRecord(IApplication app, String name) {
-		var value = changes.computeIfAbsent(app, (k) -> new ArrayList<ChangeRecord>());
-		value.add(new ChangeRecord(name, app));
+	public void addRecord(ChangeRecord record) {
+		var value = changes.computeIfAbsent(record.getApplication(), (k) -> new ArrayList<ChangeRecord>());
+		value.add(record);
 	}
 	
 	public void clearRecords(IApplication app) {

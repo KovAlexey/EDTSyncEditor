@@ -6,6 +6,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.kovalexey.infobase.sync.ui.changedrecords.ChangeRecord;
+
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.IInfobaseSynchronizationListener;
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.InfobaseEqualityState;
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.InfobaseSynchronizationState;
@@ -41,8 +43,8 @@ public class InfobaseSyncListener implements IInfobaseSynchronizationListener {
 			public IStatus run(IProgressMonitor monitor) {
 				var changes = infobaseServiceProvider.getChanges(application);
 				infobaseChangesCache.clearRecords(application);
-				for (String name : changes) {
-					infobaseChangesCache.addRecord(application, name);
+				for (ChangeRecord record : changes) {
+					infobaseChangesCache.addRecord(record);
 				}
 				
 				System.out.println(changes);

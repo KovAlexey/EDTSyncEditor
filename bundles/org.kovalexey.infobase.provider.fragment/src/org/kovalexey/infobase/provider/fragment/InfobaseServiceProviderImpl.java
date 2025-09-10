@@ -7,6 +7,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.kovalexey.infobase.sync.ui.IInfobaseServiceProvider;
+import org.kovalexey.infobase.sync.ui.changedrecords.ChangeRecord;
 
 import com._1c.g5.v8.bm.core.BmUriUtil;
 import com._1c.g5.v8.bm.core.IBmObject;
@@ -24,6 +25,7 @@ import com._1c.g5.v8.dt.platform.services.core.infobases.sync.InfobaseSynchroniz
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.InfobaseSynchronizationState;
 import com._1c.g5.v8.dt.platform.services.core.infobases.sync.strategies.ISynchronizationStrategy;
 import com._1c.g5.v8.dt.platform.services.model.InfobaseReference;
+import com.e1c.g5.dt.applications.IApplication;
 import com.e1c.g5.dt.applications.IApplicationManager;
 import com.e1c.g5.dt.applications.infobases.IInfobaseApplication;
 import com.google.inject.Inject;
@@ -104,8 +106,8 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 	}
 
 	@Override
-	public ArrayList<String> getChanges(IInfobaseApplication application) {
-		ArrayList<String> result = new ArrayList<String>();
+	public ArrayList<ChangeRecord> getChanges(IInfobaseApplication application) {
+		ArrayList<ChangeRecord> result = new ArrayList<ChangeRecord>();
 		
 		IProject project = getProjectFromInfobaseApplication(application);
 		
@@ -114,16 +116,16 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 		
 		InfobaseReference infobase = application.getInfobase();
 		
-		addChangesToList(result, infobase, project);
+		addChangesToList(result, infobase, project, application);
 		
 		for (IProject iProject : childProjects) {
-			addChangesToList(result, infobase, iProject);
+			addChangesToList(result, infobase, iProject, application);
 		}
 		
 		return result;
 	}
 
-	private void addChangesToList(ArrayList<String> changes, InfobaseReference infobase, IProject iProject) {
+	private void addChangesToList(ArrayList<ChangeRecord> result, InfobaseReference infobase, IProject iProject, IApplication application) {
 		ISynchronizationStrategy strategy;
 		strategy = this.strategyProvider.getStrategy(iProject);
 		synchronized (SpyLockProvider.getLock((AbstractSynchronizationStrategy)strategy, infobase)) {
@@ -131,7 +133,10 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 			
 			for (EObject eObject : changedObjects) {
 				String name = getObjectName(eObject, iProject);
-				changes.add(name);
+				
+				ChangeRecord record = new ChangeRecord(name, application, iProject);
+				
+				result.add(record);
 			}
 		}
 	}

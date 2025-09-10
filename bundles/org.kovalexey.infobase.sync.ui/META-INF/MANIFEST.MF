@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Ui
 Bundle-SymbolicName: org.kovalexey.infobase.sync.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
-Export-Package: org.kovalexey.infobase.sync.ui
+Export-Package: org.kovalexey.infobase.sync.ui,
+ org.kovalexey.infobase.sync.ui.changedrecords
 Bundle-Activator: org.kovalexey.infobase.sync.ui.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

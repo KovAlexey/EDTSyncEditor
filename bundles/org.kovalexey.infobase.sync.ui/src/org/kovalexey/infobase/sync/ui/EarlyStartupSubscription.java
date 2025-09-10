@@ -10,7 +10,7 @@ import org.eclipse.ui.progress.UIJob;
 
 import com.google.inject.Inject;
 
-public class Startup2 implements IStartup {
+public class EarlyStartupSubscription implements IStartup {
 
 	@Inject
 	IInfobaseServiceProvider service;
