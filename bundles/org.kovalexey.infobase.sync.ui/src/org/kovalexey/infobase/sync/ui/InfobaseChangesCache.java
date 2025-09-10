@@ -17,16 +17,26 @@ public class InfobaseChangesCache {
 	
 	public void addRecord(ChangeRecord record) {
 		var value = changes.computeIfAbsent(record.getApplication(), (k) -> new ArrayList<ChangeRecord>());
-		value.add(record);
-	}
-	
-	public void clearRecords(IApplication app) {
-		if (changes.get(app) != null) {
-			changes.get(app).clear();
+		synchronized (value) {
+			value.add(record);
 		}
 	}
 	
-	public ArrayList<ChangeRecord> getRecords(IApplication app) {
-		return changes.get(app);
+	public void clearRecords(IApplication app) {
+		var value = changes.get(app);
+		if (value == null) {
+			return;
+		}
+		changes.remove(app);
+	}
+	
+	public synchronized ArrayList<ChangeRecord> getRecords(IApplication app) {
+		var changeList = changes.get(app);
+		if (changeList == null) {
+			return changeList;
+		}
+		synchronized (changeList) {
+			return new ArrayList<ChangeRecord>(changeList);
+		}
 	}
 }
