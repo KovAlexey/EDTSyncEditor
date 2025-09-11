@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.kovalexey.infobase.sync.ui.IInfobaseServiceProvider;
 import org.kovalexey.infobase.sync.ui.changedrecords.ChangeRecord;
 
@@ -44,6 +45,8 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
 	IWorkspaceOrchestrator workspaceOrchestrator;
 	@Inject
 	IV8ProjectProvider v8ProjectProvider;
+	@Inject
+	IQualifiedNameProvider nameProvider;
 	
 	@Override
 	public Boolean isSynchronized(IProject project, InfobaseReference infobase) {
@@ -162,6 +165,7 @@ public class InfobaseServiceProviderImpl implements IInfobaseServiceProvider {
         if (object instanceof IBmObject && ((IBmObject)object).bmIsTop() && ((IBmObject)object).bmGetNamespace() != null) {
             name = ((IBmObject)object).bmGetFqn();
         }
+        name = nameProvider.getFullyQualifiedName(object).toString();
 
         if (name == null) {
             URI uri = EcoreUtil.getURI(object);
